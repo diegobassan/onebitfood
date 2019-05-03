@@ -11,8 +11,15 @@ class Restaurant < ApplicationRecord
   validates :city, presence:true
   validates :street, presence:true
 
+  geocoded_by :address
+
   enum status: {closed: 0, open: 1}
 
   has_one_attached :image
 
+  after_validation :geocode
+
+  def address
+    [street,number,city,state].compact.join(', ')
+  end
 end
